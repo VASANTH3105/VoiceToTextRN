@@ -1,71 +1,29 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  PermissionsAndroid,
-} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import Voice from '@react-native-voice/voice';
+import {View, Text, Button, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import {startSpeechToText} from 'react-native-voice-to-text';
 
 const App = () => {
-  const [isRunning, setRunning] = useState(false);
-  const [result, setResult] = useState('');
-  const [error, setError] = useState('');
-
-  Voice.onSpeechStart = () => setRunning(true);
-  Voice.onSpeechEnd = () => setRunning(false);
-  Voice.onSpeechError = (err: any) =>
-    setError(err?.error?.message || 'Unknown error occurred');
-  Voice.onSpeechResults = (result: any) => setResult(result.value[0]);
-
-  const startRecording = async () => {
-    try {
-      const permission = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-      );
-
-      if (permission === PermissionsAndroid.RESULTS.GRANTED) {
-        setError('');
-        await Voice.start('en-US');
-        console.log('Voice recognition started');
-      } else {
-        setError('Permission denied');
-      }
-    } catch (error: any) {
-      setError(error?.message || 'Error while starting voice recognition');
-    }
-  };
-
-  const stopRecording = async () => {
-    try {
-      await Voice.stop();
-    } catch (error: any) {
-      setError(error?.message || 'Error while stopping voice recognition');
-    }
-  };
-
-  useEffect(() => {
-  return () => {
-    Voice.destroy().then(Voice.removeAllListeners);
-  };
-}, []);
-
+  const [text, setText] = useState<any>('');
 
   return (
     <View style={styles.container}>
+      <Text style={{color: 'white', fontWeight: 'bold'}}>Result: {text}</Text>
       <Text style={styles.heading1}>Voice Assistant POC</Text>
       <TouchableOpacity
-        style={[
-          styles.button,
-          {backgroundColor: isRunning ? '#ffb3b3' : '#d6f5d6'},
-        ]}
-        onPress={isRunning ? stopRecording : startRecording}>
-        <Text>{isRunning ? 'Stop' : 'Start'}</Text>
+        style={[styles.button, {backgroundColor: '#d6f5d6'}]}
+        onPress={async () => {
+          try {
+            const audioText = await startSpeechToText();
+            console.log('audioText:', {audioText});
+            setText(audioText);
+          } catch (error) {
+            console.log({error});
+          }
+        }}>
+        <Text>{'Start'}</Text>
       </TouchableOpacity>
 
-      {result ? <Text>Result: {result}</Text> : null}
-      {error ? <Text style={{color: 'red'}}>Error: {error}</Text> : null}
+      <Text style={{color: '#000000', fontWeight: 'bold'}}>Result: {text}</Text>
     </View>
   );
 };
