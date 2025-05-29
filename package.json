@@ -13,6 +13,7 @@
     "@react-native-voice/voice": "^3.2.4",
     "react": "19.0.0",
     "react-native": "0.79.2",
+    "react-native-tts": "^4.1.1",
     "react-native-voice-to-text": "^0.1.4"
   },
   "devDependencies": {
