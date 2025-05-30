@@ -22,6 +22,9 @@ const UserAction = () => {
     });
   }, []);
 
+
+  // Pass your API response text here as argument
+
   const speakHelloWorld = (textData) => {
     setIsSpeaking(true);
     Tts.stop();

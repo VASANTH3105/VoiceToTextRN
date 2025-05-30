@@ -17,18 +17,18 @@ const App = () => {
       }}>
       <View style={styles?.headerContainer}>
         <TouchableOpacity
-          onPress={() => setIsAdmin(true)}
+          onPress={() => setIsAdmin(false)}
           style={styles?.clickable}>
           <Text>User</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => setIsAdmin(false)}
+          onPress={() => setIsAdmin(true)}
           style={styles?.clickable}>
           <Text>Admin</Text>
         </TouchableOpacity>
       </View>
 
-      {isAdmin ? <UserAction /> : <AdminController />}
+      {isAdmin ? <AdminController /> : <UserAction />}
     </View>
   );
 };
